@@ -1,6 +1,6 @@
 {
-  "name": "students",
+  "name": "student",
   "version": "0.0.0",
   "private": true,
-  "main": "Students.js"
+  "main": "Student.js"
 }

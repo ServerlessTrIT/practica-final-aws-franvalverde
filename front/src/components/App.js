@@ -4,11 +4,8 @@ import { Switch, Route, Redirect } from 'react-router';
 import { HashRouter } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 
-/* eslint-disable */
-import ErrorPage from '../pages/error';
-/* eslint-enable */
-
 import '../styles/theme.scss';
+import ErrorPage from '../pages/error';
 import LayoutComponent from '../components/Layout';
 import Login from '../pages/login';
 import Register from '../pages/register';
@@ -38,14 +35,14 @@ class App extends React.PureComponent {
             />
             <HashRouter>
                 <Switch>
-                    <Route path="/" exact render={() => <Redirect to="/app/main"/>}/>
-                    <Route path="/app" exact render={() => <Redirect to="/app/main"/>}/>
+                    <Route path="/" exact render={() => <Redirect to="/app/students"/>}/>
+                    <Route path="/app" exact render={() => <Redirect to="/app/students"/>}/>
                     <PrivateRoute path="/app" dispatch={this.props.dispatch} component={LayoutComponent}/>
                     <Route path="/register" exact component={Register}/>
                     <Route path="/login" exact component={Login}/>
                     <Route path="/error" exact component={ErrorPage}/>
                     <Route component={ErrorPage}/>
-                    <Redirect from="*" to="/app/main/dashboard"/>
+                    <Redirect from="*" to="/app/students"/>
                 </Switch>
             </HashRouter>
         </div>

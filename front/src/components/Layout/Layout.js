@@ -5,13 +5,10 @@ import { Switch, Route, withRouter, Redirect } from 'react-router';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
 import Hammer from 'rc-hammerjs';
 
-import UIIcons from '../../pages/components/icons';
-import UINotifications from '../../pages/notifications';
-import TablesStatic from '../../pages/tables/static';
-import MapsGoogle from '../../pages/components/maps/google';
-import CoreTypography from '../../pages/typography';
-import Charts from '../../pages/components/charts/Charts';
+import Students from '../../pages/students';
+import Student from '../../pages/student';
 import Dashboard from '../../pages/dashboard';
+import ErrorPage from "../../pages/error";
 
 import Header from '../Header';
 import Sidebar from '../Sidebar';
@@ -64,8 +61,6 @@ class Layout extends React.Component {
       >
         <div className={s.wrap}>
           <Header />
-          {/* <Chat chatOpen={this.state.chatOpen} /> */}
-          {/* <Helper /> */}
           <Sidebar />
           <Hammer onSwipe={this.handleSwipe}>
             <main className={s.content}>
@@ -77,20 +72,16 @@ class Layout extends React.Component {
                   timeout={200}
                 >
                   <Switch>
-                    <Route path="/app/main" exact render={() => <Redirect to="/app/main/dashboard" />} />
+                    <Route path="/app/main" exact render={() => <Redirect to="/app/main/students" />} />
                     <Route path="/app/main/dashboard" exact component={Dashboard} />
-                    <Route path="/app/icons" exact component={UIIcons} />
-                    <Route path="/app/notifications" exact component={UINotifications} />
-                    <Route path="/app/charts" exact component={Charts} />
-                    <Route path="/app/tables" exact component={TablesStatic} />
-                    <Route path="/app/maps" exact component={MapsGoogle} />
-                    <Route path="/app/typography" exact component={CoreTypography} />
+                    <Route path="/app/dashboard" exact component={Dashboard} />
+                    <Route path="/app/students" exact component={Students} />
+                    <Route path="/app/student" exact component={Student} />
+                    <Route path="/app/student/:id" exact component={Student} />
+                    <Route path="/app/*" exact component={ErrorPage} />
                   </Switch>
                 </CSSTransition>
               </TransitionGroup>
-              <footer className={s.contentFooter}>
-                Light Blue React Template - React admin template made by <a href="https://flatlogic.com" >Flatlogic</a>
-              </footer>
             </main>
           </Hammer>
         </div>

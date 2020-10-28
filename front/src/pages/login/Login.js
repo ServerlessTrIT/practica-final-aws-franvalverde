@@ -97,7 +97,7 @@ class Login extends React.Component {
                                 </InputGroup>
                             </FormGroup>
                             <div className="bg-widget auth-widget-footer">
-                                <Button type="submit" color="danger" className="auth-btn"
+                                <Button type="submit" color="primary" className="auth-btn"
                                         size="sm" style={{color: '#fff'}}>
                                   <span className="auth-btn-circle" style={{marginRight: 8}}>
                                     <i className="la la-caret-right"/>

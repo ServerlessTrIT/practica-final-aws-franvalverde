@@ -1,13 +1,11 @@
-@import '../../../styles/app';
+@import '../../styles/app';
 
 .root {
 
 }
 
-.mainTableWidget {
-  :global {
-    .table td {
-      border: none;
-    }
-  }
+td .actionIcon {
+  cursor: pointer;
+  padding: 0px 4px;
+  color: #ccc;
 }

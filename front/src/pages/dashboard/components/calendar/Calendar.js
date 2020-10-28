@@ -13,29 +13,34 @@ class Calendar extends Component {
       selectedDay: moment().startOf("day"),
       selectedMonthEvents: [
         {
-          title: "The flower bed",
-          info: "Contents here",
-          itemStyle: "#1870dc",
-          date: moment(`${moment().year()}-${moment().month()+1}-02`, "YYYY-MM-DD"),
-        },
-        {
-          title: "Stop world water pollution",
-          info: "Have a kick off meeting with .inc company",
-          itemStyle: "#f0b518",
-          date: moment(`${moment().year()}-${moment().month()+1}-05`, "YYYY-MM-DD"),
-        },
-        {
-          title: "Light Blue Template 1.0.0 release",
-          info: "Some contents here",
-          itemStyle: "#58d777",
-          date: moment(`${moment().year()}-${moment().month()+1}-18`, "YYYY-MM-DD"),
-        },
-        {
-          title: "A link",
+          title: "National Holiday of Spain",
           info: "",
           itemStyle: "#f45722",
-          link: "http://www.flatlogic.com",
-          date: moment(`${moment().year()}-${moment().month()+1}-29`, "YYYY-MM-DD"),
+          date: moment(`${moment().year()}-10-12`, "YYYY-MM-DD"),
+        },
+        {
+          title: "All Saints Day",
+          info: "",
+          itemStyle: "#f45722",
+          date: moment(`${moment().year()}-11-01`, "YYYY-MM-DD"),
+        },
+        {
+          title: "Day of the constitution",
+          info: "",
+          itemStyle: "#f45722",
+          date: moment(`${moment().year()}-12-06`, "YYYY-MM-DD"),
+        },
+        {
+          title: "Immaculate Conception",
+          info: "",
+          itemStyle: "#f45722",
+          date: moment(`${moment().year()}-12-08`, "YYYY-MM-DD"),
+        },
+        {
+          title: "Christmas",
+          info: "",
+          itemStyle: "#f45722",
+          date: moment(`${moment().year()}-12-25`, "YYYY-MM-DD"),
         },
       ],
       showEvents: false
