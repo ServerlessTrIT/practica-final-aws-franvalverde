@@ -1,0 +1,101 @@
+# Welcome to Serverless! For full config options, check the docs:
+#    docs.serverless.com
+#
+# Happy Coding!
+
+service: apiCourse
+
+frameworkVersion: '2'
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+
+  stage: ${opt:stage, 'dev'}
+  region: eu-central-1
+  endpointType: REGIONAL
+  apiName: apiCourse-${self:provider.stage}
+  apiKeys:
+    - api-course-${self:provider.stage}
+  usagePlan:
+    quota:
+      limit: 1000
+      offset: 0
+      period: DAY
+    throttle:
+      burstLimit: 200
+      rateLimit: 100
+
+# you can add statements to the Lambda function's IAM Role here
+#  iamRoleStatements:
+#    - Effect: "Allow"
+#      Action:
+#        - "s3:ListBucket"
+#      Resource: { "Fn::Join" : ["", ["arn:aws:s3:::", { "Ref" : "ServerlessDeploymentBucket" } ] ]  }
+#    - Effect: "Allow"
+#      Action:
+#        - "s3:PutObject"
+#      Resource:
+#        Fn::Join:
+#          - ""
+#          - - "arn:aws:s3:::"
+#            - "Ref" : "ServerlessDeploymentBucket"
+#            - "/*"
+
+#  environment:
+#    variable1: value1
+
+#- Obtener todos los items (GET).
+#- Obtener un item por id (GET).
+#- Eliminar un item por su id (DELETE).
+#- Insertar un item nuevo (PUT).
+#- Modificar un item ya existente (POST).
+
+functions:
+  listStudents:
+    handler: listStudents.handler
+    events:
+      - http:
+          path: users
+          method: get
+          private: true
+  getStudent:
+      handler: getStudent.handler
+      events:
+        - http:
+            path: users/{id}
+            method: get
+            private: true
+  deleteStudent:
+      handler: deleteStudent.handler
+      events:
+        - http:
+            path: users/{id}
+            method: delete
+            private: true
+  createStudent:
+      handler: createStudent.handler
+      events:
+        - http:
+            path: users
+            method: post
+            private: true
+  updateStudent:
+      handler: updateStudent.handler
+      events:
+        - http:
+            path: users/{id}
+            method: put
+            private: true
+
+# you can add CloudFormation resource templates here
+#resources:
+#  Resources:
+#    NewResource:
+#      Type: AWS::S3::Bucket
+#      Properties:
+#        BucketName: my-new-bucket
+#  Outputs:
+#     NewOutput:
+#       Description: "Description for the output"
+#       Value: "Some output value"
