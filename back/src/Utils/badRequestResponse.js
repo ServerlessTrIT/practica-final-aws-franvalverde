@@ -1,13 +1,8 @@
-const responseOutput = (code, body) => {
+const badRequestResponse = () => {
     return {
-        statusCode: code,
-        headers: {
-            'Access-Control-Allow-Origin': '*',
-            'Access-Control-Allow-Credentials': true,
-        },
-        body: JSON.stringify(body, null, 2),
+        code: 400,
+        body: { message: 'Bad Request' }
     };
 };
 
-
-exports.responseOutput = responseOutput;
+exports.badRequestResponse = badRequestResponse;

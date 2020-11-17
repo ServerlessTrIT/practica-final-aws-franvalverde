@@ -13,6 +13,16 @@ provider:
 
   stage: ${opt:stage, 'dev'}
   region: eu-central-1
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - dynamodb:Query
+        - dynamodb:Scan
+        - dynamodb:GetItem
+        - dynamodb:PutItem
+        - dynamodb:UpdateItem
+        - dynamodb:DeleteItem
+      Resource: "arn:aws:dynamodb:eu-central-1:846728304019:table/awsCourse"
   endpointType: REGIONAL
   apiName: apiCourse-${self:provider.stage}
   apiKeys:
@@ -26,24 +36,6 @@ provider:
       burstLimit: 200
       rateLimit: 100
 
-# you can add statements to the Lambda function's IAM Role here
-#  iamRoleStatements:
-#    - Effect: "Allow"
-#      Action:
-#        - "s3:ListBucket"
-#      Resource: { "Fn::Join" : ["", ["arn:aws:s3:::", { "Ref" : "ServerlessDeploymentBucket" } ] ]  }
-#    - Effect: "Allow"
-#      Action:
-#        - "s3:PutObject"
-#      Resource:
-#        Fn::Join:
-#          - ""
-#          - - "arn:aws:s3:::"
-#            - "Ref" : "ServerlessDeploymentBucket"
-#            - "/*"
-
-#  environment:
-#    variable1: value1
 
 #- Obtener todos los items (GET).
 #- Obtener un item por id (GET).
@@ -59,6 +51,7 @@ functions:
           path: users
           method: get
           private: true
+          cors: true
   getStudent:
       handler: getStudent.handler
       events:
@@ -66,6 +59,7 @@ functions:
             path: users/{id}
             method: get
             private: true
+            cors: true
   deleteStudent:
       handler: deleteStudent.handler
       events:
@@ -73,6 +67,7 @@ functions:
             path: users/{id}
             method: delete
             private: true
+            cors: true
   createStudent:
       handler: createStudent.handler
       events:
@@ -80,6 +75,7 @@ functions:
             path: users
             method: post
             private: true
+            cors: true
   updateStudent:
       handler: updateStudent.handler
       events:
@@ -89,13 +85,19 @@ functions:
             private: true
 
 # you can add CloudFormation resource templates here
-#resources:
-#  Resources:
-#    NewResource:
-#      Type: AWS::S3::Bucket
-#      Properties:
-#        BucketName: my-new-bucket
-#  Outputs:
-#     NewOutput:
-#       Description: "Description for the output"
-#       Value: "Some output value"
+resources:
+  Resources:
+    awsCourse:
+        Type: AWS::DynamoDB::Table
+        Properties:
+            TableName: awsCourse
+            AttributeDefinitions:
+              - AttributeName: id
+                AttributeType: S
+            KeySchema:
+              - AttributeName: id
+                KeyType: HASH
+            ProvisionedThroughput:
+              ReadCapacityUnits: 1
+              WriteCapacityUnits: 1
+

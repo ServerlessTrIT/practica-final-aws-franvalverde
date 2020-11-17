@@ -52,8 +52,32 @@ class Student extends React.Component {
   }
 
   handleSubmit(event) {
-    alert('A name was submitted: ' + this.state.name);
     event.preventDefault();
+    let createAction = true;
+
+    if (createAction) {
+      const requestOptions = {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-api-key': 'Gd7LcGP0xu7ww2Iq3FlgB6vdhXIiZJui8Gllxohl'
+        },
+        body: JSON.stringify({
+          name: this.state.name,
+          surname: this.state.surname,
+          city: this.state.city,
+          state: this.state.state,
+          zip: this.state.zip,
+          email: this.state.email,
+          phone: this.state.phone
+        })
+      }
+      let url = 'https://s451u8kmmj.execute-api.eu-central-1.amazonaws.com/prod/users';
+      fetch(url, requestOptions)
+          .then(response => response.json())
+          .then(data => console.log({ totalReactPackages: data.total }));
+    }
+
   }
 
   render() {

@@ -1,11 +1,13 @@
-const getResponse = (str) => {
-    try {
-        JSON.parse(str);
-    } catch (e) {
-        return false;
-    }
-    return true;
+const responseOutput = (code, body) => {
+    return {
+        statusCode: code,
+        headers: {
+            'Access-Control-Allow-Origin': '*',
+            'Access-Control-Allow-Credentials': true,
+        },
+        body: JSON.stringify(body, null, 2),
+    };
 };
 
 
-exports.getResponse = getResponse;
+exports.responseOutput = responseOutput;

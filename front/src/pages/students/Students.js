@@ -40,6 +40,17 @@ class Students extends React.Component {
     };
   }
 
+  componentDidMount() {
+    const headers = {
+      'Content-Type': 'application/json',
+      'x-api-key': 'Gd7LcGP0xu7ww2Iq3FlgB6vdhXIiZJui8Gllxohl'
+    }
+    let url = 'https://s451u8kmmj.execute-api.eu-central-1.amazonaws.com/prod/users';
+    fetch(url, { headers })
+        .then(response => response.json())
+        .then(data => console.log({ totalReactPackages: data.total }));
+  }
+
   handleClickNew () {
     this.state.history.push("/app/dashboard");
   }
