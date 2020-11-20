@@ -10,3 +10,7 @@ Existen tres carpetas en la raiz de este proyecto.
 - front: aplicación SPA desplegada sobre un bucket de S3 configurado para servir contenido estatico
 - back: funciones lambda que asociadas a los endpoint requeridos
 - cli: comandos necesarios para el correcto funcionamiento de nuestra aplicación sobre servicios de aws
+
+## Resultado Web
+
+🔗 [https://dp628skk6mqx.cloudfront.net](https://dp628skk6mqx.cloudfront.net/)

@@ -1,15 +1,13 @@
-# Welcome to Serverless! For full config options, check the docs:
-#    docs.serverless.com
+# Welcome to Serverless!
 #
 # Happy Coding!
 
-service: apiCourse
-
+service: awsCourse
 frameworkVersion: '2'
 
 provider:
   name: aws
-  runtime: nodejs12.x
+  runtime: python3.8
 
   stage: ${opt:stage, 'dev'}
   region: eu-central-1
@@ -36,13 +34,6 @@ provider:
       burstLimit: 200
       rateLimit: 100
 
-
-#- Obtener todos los items (GET).
-#- Obtener un item por id (GET).
-#- Eliminar un item por su id (DELETE).
-#- Insertar un item nuevo (PUT).
-#- Modificar un item ya existente (POST).
-
 functions:
   listStudents:
     handler: listStudents.handler
@@ -53,51 +44,49 @@ functions:
           private: true
           cors: true
   getStudent:
-      handler: getStudent.handler
-      events:
-        - http:
-            path: users/{id}
-            method: get
-            private: true
-            cors: true
+    handler: getStudent.handler
+    events:
+      - http:
+          path: users/{id}
+          method: get
+          private: true
+          cors: true
   deleteStudent:
-      handler: deleteStudent.handler
-      events:
-        - http:
-            path: users/{id}
-            method: delete
-            private: true
-            cors: true
+    handler: deleteStudent.handler
+    events:
+      - http:
+          path: users/{id}
+          method: delete
+          private: true
+          cors: true
   createStudent:
-      handler: createStudent.handler
-      events:
-        - http:
-            path: users
-            method: post
-            private: true
-            cors: true
+    handler: createStudent.handler
+    events:
+      - http:
+          path: users
+          method: post
+          private: true
+          cors: true
   updateStudent:
-      handler: updateStudent.handler
-      events:
-        - http:
-            path: users/{id}
-            method: put
-            private: true
+    handler: updateStudent.handler
+    events:
+      - http:
+          path: users/{id}
+          method: put
+          private: true
 
-# you can add CloudFormation resource templates here
 resources:
   Resources:
     awsCourse:
-        Type: AWS::DynamoDB::Table
-        Properties:
-            TableName: awsCourse
-            AttributeDefinitions:
-              - AttributeName: id
-                AttributeType: S
-            KeySchema:
-              - AttributeName: id
-                KeyType: HASH
-            ProvisionedThroughput:
-              ReadCapacityUnits: 1
-              WriteCapacityUnits: 1
-
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: awsCourse
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1

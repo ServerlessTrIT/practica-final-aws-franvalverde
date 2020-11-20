@@ -23,6 +23,14 @@ class Student extends React.Component {
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
+  uuidv4Generator() {
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+      // eslint-disable-next-line
+      let r = Math.random() * 16 | 0, v = c === 'x' ? r : (r & 0x3 | 0x8);
+      return v.toString(16);
+    });
+  }
+
   handleChange(event) {
     let property = {name: event.target.value}
     switch (event.target.name) {
@@ -56,13 +64,16 @@ class Student extends React.Component {
     let createAction = true;
 
     if (createAction) {
+      let uuid = this.uuidv4Generator();
+
       const requestOptions = {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'x-api-key': 'Gd7LcGP0xu7ww2Iq3FlgB6vdhXIiZJui8Gllxohl'
+          'x-api-key': 'GjftIFzE898KGPBGoRmc18Szrm3dP5h7RjvFFg19'
         },
         body: JSON.stringify({
+          id: uuid,
           name: this.state.name,
           surname: this.state.surname,
           city: this.state.city,
@@ -72,7 +83,7 @@ class Student extends React.Component {
           phone: this.state.phone
         })
       }
-      let url = 'https://s451u8kmmj.execute-api.eu-central-1.amazonaws.com/prod/users';
+      let url = 'https://g1mmrc3a5f.execute-api.eu-central-1.amazonaws.com/prod/users';
       fetch(url, requestOptions)
           .then(response => response.json())
           .then(data => console.log({ totalReactPackages: data.total }));

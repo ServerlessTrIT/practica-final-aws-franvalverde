@@ -4,7 +4,7 @@ En pimer lugar es necesario instalar serverless en la maquina local:
 
 #### 1. Creación del proyecto en nodejs
 ```
-sls create --template aws-nodejs --name apiCourse
+sls create --template aws-python3 --name awsCourse --path back
 ```   
 
 #### 2. Invocar una función en local
