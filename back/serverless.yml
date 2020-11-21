@@ -11,6 +11,11 @@ provider:
 
   stage: ${opt:stage, 'dev'}
   region: eu-central-1
+
+  environment:
+    CLIENT_ID:
+      Ref: awsCoursePoolClient
+
   iamRoleStatements:
     - Effect: Allow
       Action:
@@ -35,6 +40,30 @@ provider:
       rateLimit: 100
 
 functions:
+  login:
+    handler: login.handler
+    events:
+      - http:
+          path: login
+          method: post
+          private: true
+          cors: true
+  signup:
+    handler: signup.handler
+    events:
+      - http:
+          path: signup
+          method: post
+          private: true
+          cors: true
+  confirmSignup:
+    handler: confirmSignup.handler
+    events:
+      - http:
+          path: confirmSignup
+          method: post
+          private: true
+          cors: true
   listStudents:
     handler: listStudents.handler
     events:
@@ -90,3 +119,39 @@ resources:
         ProvisionedThroughput:
           ReadCapacityUnits: 1
           WriteCapacityUnits: 1
+    awsCoursePool:
+      Type: AWS::Cognito::UserPool
+      Properties:
+        UserPoolName: awsCoursePool-${self:provider.stage}
+        Policies:
+          PasswordPolicy:
+            MinimumLength: 8
+            RequireLowercase: true
+            RequireUppercase: true
+            TemporaryPasswordValidityDays: 15
+        UsernameAttributes:
+          - email
+        AutoVerifiedAttributes:
+          - email
+        EmailVerificationMessage: 'Your verify code is {####}'
+        EmailVerificationSubject: 'Welcome to awsCourse'
+        MfaConfiguration: OFF
+        UserPoolTags:
+          Env: ${self:provider.stage}
+        AdminCreateUserConfig:
+          AllowAdminCreateUserOnly: false
+          InviteMessageTemplate:
+            EmailMessage: 'This is the password of your account {username} to awsCourse: {####}'
+            EmailSubject: 'Welcome to awsCourse'
+        UsernameConfiguration:
+          CaseSensitive: false
+
+    awsCoursePoolClient:
+      Type: AWS::Cognito::UserPoolClient
+      Properties:
+        ClientName: awsCoursePoolClient-${self:provider.stage}
+        ExplicitAuthFlows:
+          - USER_PASSWORD_AUTH
+        RefreshTokenValidity: 30
+        UserPoolId:
+          Ref: awsCoursePool
