@@ -25,8 +25,8 @@ def handler(event, context):
         "statusCode": codeResponse,
         "headers": {
            'Access-Control-Allow-Headers': 'Content-Type',
-           'Access-Control-Allow-Origin': 'http://franvalverde-website.s3-website.eu-central-1.amazonaws.com',
-           'Access-Control-Allow-Methods': 'OPTIONS,POST,GET'
+           'Access-Control-Allow-Origin': '*',
+           'Access-Control-Allow-Methods': 'OPTIONS,GET'
         },
         "body": json.dumps(bodyResponse)
     }

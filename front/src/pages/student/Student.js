@@ -17,10 +17,42 @@ class Student extends React.Component {
       state: '',
       zip: '',
       email: '',
-      phone: ''
+      phone: '',
+      editMode: false
     };
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+  }
+
+  componentDidMount() {
+    if (this.state.studientId !== '' && this.state.studientId !== 'undefined' && typeof this.state.studientId !== 'undefined') {
+      this.setState({editMode: true });
+      this.getStudent();
+    }
+  }
+
+  getStudent () {
+    const requestOptions = {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': 'GjftIFzE898KGPBGoRmc18Szrm3dP5h7RjvFFg19'
+      }
+    }
+    let url = 'https://g1mmrc3a5f.execute-api.eu-central-1.amazonaws.com/prod/users/' + this.state.studientId;
+    fetch(url, requestOptions)
+        .then(response => response.json())
+        .then(data => this.setDatafromResponse(data));
+  }
+
+  setDatafromResponse (response) {
+    this.setState({name: response.item.name });
+    this.setState({surname: response.item.surname });
+    this.setState({city: response.item.city });
+    this.setState({state: response.item.state });
+    this.setState({zip: response.item.zip });
+    this.setState({email: response.item.email });
+    this.setState({phone: response.item.phone });
   }
 
   uuidv4Generator() {
@@ -73,7 +105,7 @@ class Student extends React.Component {
           'x-api-key': 'GjftIFzE898KGPBGoRmc18Szrm3dP5h7RjvFFg19'
         },
         body: JSON.stringify({
-          id: uuid,
+          id: (this.state.editMode) ? this.state.studientId : uuid,
           name: this.state.name,
           surname: this.state.surname,
           city: this.state.city,
@@ -86,9 +118,12 @@ class Student extends React.Component {
       let url = 'https://g1mmrc3a5f.execute-api.eu-central-1.amazonaws.com/prod/users';
       fetch(url, requestOptions)
           .then(response => response.json())
-          .then(data => console.log({ totalReactPackages: data.total }));
+          .then(data => this.successSave());
     }
+  }
 
+  successSave() {
+    window.location.href = '../app/students';
   }
 
   render() {

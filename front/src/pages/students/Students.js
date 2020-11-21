@@ -25,30 +25,45 @@ class Students extends React.Component {
         show: false,
         idItem: 0
       },
-      data: [
-        {
-          id: 1,
-          name: 'Pablo',
-          surname: 'High',
-        },
-        {
-          id: 2,
-          name: 'Rubén',
-          surname: 'Down',
-        },
-      ],
+      data: [],
     };
   }
 
   componentDidMount() {
-    const headers = {
-      'Content-Type': 'application/json',
-      'x-api-key': 'Gd7LcGP0xu7ww2Iq3FlgB6vdhXIiZJui8Gllxohl'
+    this.listStudents();
+  }
+
+  listStudents () {
+    const requestOptions = {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': 'GjftIFzE898KGPBGoRmc18Szrm3dP5h7RjvFFg19'
+      }
     }
-    let url = 'https://s451u8kmmj.execute-api.eu-central-1.amazonaws.com/prod/users';
-    fetch(url, { headers })
+    let url = 'https://g1mmrc3a5f.execute-api.eu-central-1.amazonaws.com/prod/users';
+    fetch(url, requestOptions)
         .then(response => response.json())
-        .then(data => console.log({ totalReactPackages: data.total }));
+        .then(data => this.setDatafromResponse(data.items));
+  }
+
+  deleteStudent () {
+    this.handleClose();
+    const requestOptions = {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': 'GjftIFzE898KGPBGoRmc18Szrm3dP5h7RjvFFg19'
+      }
+    }
+    let url = 'https://g1mmrc3a5f.execute-api.eu-central-1.amazonaws.com/prod/users/' + this.state.dialog.idItem;
+    fetch(url, requestOptions)
+        .then(response => response.json())
+        .then(data => this.listStudents());
+  }
+
+  setDatafromResponse (response) {
+    this.setState({data: response });
   }
 
   handleClickNew () {
@@ -131,7 +146,7 @@ class Students extends React.Component {
                   <Button onClick={event => this.handleClose()} color="primary">
                     Cancel
                   </Button>
-                  <Button onClick={event => this.handleClose()} color="primary" autoFocus>
+                  <Button onClick={event => this.deleteStudent()} color="primary" autoFocus>
                     Confirm
                   </Button>
                 </DialogActions>
