@@ -33,6 +33,7 @@ export function logoutUser() {
     return (dispatch) => {
         dispatch(requestLogout());
         localStorage.removeItem('authenticated');
+        localStorage.removeItem('authData');
         dispatch(receiveLogout());
     };
 }
@@ -44,6 +45,7 @@ export function loginUser(creds) {
 
         if (creds.email.length > 0 && creds.password.length > 0) {
             localStorage.setItem('authenticated', true)
+            localStorage.setItem('authData', JSON.stringify(creds))
         } else {
             dispatch(loginError('Something was wrong. Try again'));
         }

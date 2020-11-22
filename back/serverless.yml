@@ -72,6 +72,9 @@ functions:
           method: get
           private: true
           cors: true
+          authorizer:
+            type: COGNITO_USER_POOLS
+            authorizerId: !Ref awsCourseAuthorizer
   getStudent:
     handler: getStudent.handler
     events:
@@ -80,6 +83,9 @@ functions:
           method: get
           private: true
           cors: true
+          authorizer:
+            type: COGNITO_USER_POOLS
+            authorizerId: !Ref awsCourseAuthorizer
   deleteStudent:
     handler: deleteStudent.handler
     events:
@@ -88,6 +94,9 @@ functions:
           method: delete
           private: true
           cors: true
+          authorizer:
+            type: COGNITO_USER_POOLS
+            authorizerId: !Ref awsCourseAuthorizer
   createStudent:
     handler: createStudent.handler
     events:
@@ -96,6 +105,9 @@ functions:
           method: post
           private: true
           cors: true
+          authorizer:
+            type: COGNITO_USER_POOLS
+            authorizerId: !Ref awsCourseAuthorizer
   updateStudent:
     handler: updateStudent.handler
     events:
@@ -103,6 +115,9 @@ functions:
           path: users/{id}
           method: put
           private: true
+          authorizer:
+            type: COGNITO_USER_POOLS
+            authorizerId: !Ref awsCourseAuthorizer
 
 resources:
   Resources:
@@ -155,3 +170,14 @@ resources:
         RefreshTokenValidity: 30
         UserPoolId:
           Ref: awsCoursePool
+
+    awsCourseAuthorizer:
+      Type: AWS::ApiGateway::Authorizer
+      Properties:
+        Name: awsCourseAuthorizer-${self:provider.stage}
+        RestApiId:
+          Ref: ApiGatewayRestApi
+        Type: COGNITO_USER_POOLS
+        ProviderARNs:
+          - !GetAtt awsCoursePool.Arn
+        IdentitySource: method.request.header.Authorization

@@ -5,6 +5,13 @@ import { connect } from 'react-redux';
 import { Container, Alert, Button, FormGroup, Label, InputGroup, InputGroupAddon, Input, InputGroupText } from 'reactstrap';
 import Widget from '../../components/Widget';
 import { loginUser } from '../../actions/user';
+import s from './Login.module.scss';
+
+const ValidateRender = () => (
+    <div>
+        <Alert color="info">Validating the user ...</Alert>
+    </div>
+)
 
 class Login extends React.Component {
     static propTypes = {
@@ -19,14 +26,72 @@ class Login extends React.Component {
         super(props);
 
         this.state = {
-            email: 'admin@flatlogic.com',
-            password: 'password',
+            email: 'franvalverde@mailinator.com',
+            password: 'Francisco1',
+            showSnackbar: false,
+            messageSnackbar: '',
+            colorSnackbar: 'warning',
+            token: '',
+            isValidating: false
         };
 
         this.doLogin = this.doLogin.bind(this);
         this.changeEmail = this.changeEmail.bind(this);
         this.changePassword = this.changePassword.bind(this);
         this.signUp = this.signUp.bind(this);
+    }
+
+    getUrlVars() {
+        let vars = {};
+        window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi,
+            function(m,key,value) {
+                vars[key] = value;
+        });
+        return vars;
+    }
+
+    componentDidMount() {
+        let username = this.getUrlVars()["username"];
+        let code = this.getUrlVars()["code"];
+        if (username !== 'undefined' && typeof username !== 'undefined' &&
+            code !== 'undefined' && typeof code !== 'undefined') {
+            this.setState({ email: username });
+            this.setState({ isValidating: true });
+            this.validateUser ();
+        }
+    }
+
+    validateUser () {
+        const requestOptions = {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'x-api-key': 'GjftIFzE898KGPBGoRmc18Szrm3dP5h7RjvFFg19'
+            },
+            body: JSON.stringify({
+                username: this.getUrlVars()["username"],
+                code: this.getUrlVars()['code']
+            })
+        }
+        let url = 'https://g1mmrc3a5f.execute-api.eu-central-1.amazonaws.com/prod/confirmSignup';
+        fetch(url, requestOptions)
+            .then(function(response) {
+                if (!response.ok) {
+                    //window.location.href = window.location.origin;
+                    throw Error(response.statusText);
+                }
+                return response;
+            })
+            .then(response => response.json())
+            .then(data => this.validationSuccess())
+            .catch(function() {
+                //catch
+            });
+    }
+
+    validationSuccess () {
+        this.setState({isValidating:false});
+        this.showAlert('User verified successfully', 'success');
     }
 
     changeEmail(event) {
@@ -39,7 +104,47 @@ class Login extends React.Component {
 
     doLogin(e) {
         e.preventDefault();
-        this.props.dispatch(loginUser({ email: this.state.email, password: this.state.password }));
+        let parent = this;
+        const requestOptions = {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'x-api-key': 'GjftIFzE898KGPBGoRmc18Szrm3dP5h7RjvFFg19'
+            },
+            body: JSON.stringify({
+                username: this.state.email,
+                password: this.state.password
+            })
+        }
+        let url = 'https://g1mmrc3a5f.execute-api.eu-central-1.amazonaws.com/prod/login';
+        fetch(url, requestOptions)
+            .then(function(response) {
+                if (!response.ok) {
+                    parent.showAlert('User or password incorrect', 'warning');
+                    throw Error(response.statusText);
+                }
+                return response;
+            })
+            .then(response => response.json())
+            .then(data => this.loginSuccess(data))
+            .catch(function() {
+                //catch
+            });
+    }
+
+    loginSuccess(data) {
+        this.props.dispatch(loginUser({ email: this.state.email, password: this.state.password, token: data.token }));
+        window.location.href = window.location.origin + '/#/app/students';
+    }
+
+    showAlert(msg, color) {
+        this.setState({messageSnackbar: msg})
+        this.setState({ colorSnackbar: color });
+        this.setState({showSnackbar:true},()=>{
+            window.setTimeout(()=>{
+                this.setState({showSnackbar:false})
+            },5000)
+        });
     }
 
     signUp() {
@@ -63,7 +168,8 @@ class Login extends React.Component {
                         <p className="widget-auth-info">
                             Use your email to sign in.
                         </p>
-                        <form onSubmit={this.doLogin}>
+                        { this.state.isValidating ? <ValidateRender /> : null }
+                        <form onSubmit={this.doLogin} className={this.state.isValidating ? s.hideForm: ''}>
                             {
                                 this.props.errorMessage && (
                                     <Alert className="alert-sm widget-middle-overflow rounded-0" color="danger">
@@ -108,6 +214,7 @@ class Login extends React.Component {
                                     Don't have an account? Sign up now!
                                 </p>
                                 <Link className="d-block text-center mb-4" to="register">Create an Account</Link>
+                                <Alert color={this.state.colorSnackbar} isOpen={this.state.showSnackbar}>{this.state.messageSnackbar}</Alert>
                             </div>
                         </form>
                     </Widget>

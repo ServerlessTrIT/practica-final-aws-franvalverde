@@ -21,6 +21,11 @@ class Students extends React.Component {
     super(props);
     this.state = {
       history: props.history,
+      headerRequest: {
+        'Content-Type': 'application/json',
+        'x-api-key': 'GjftIFzE898KGPBGoRmc18Szrm3dP5h7RjvFFg19',
+        'Authorization': 'Bearer ' + JSON.parse(localStorage.getItem('authData'))['token']
+      },
       dialog: {
         show: false,
         idItem: 0
@@ -36,25 +41,22 @@ class Students extends React.Component {
   listStudents () {
     const requestOptions = {
       method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': 'GjftIFzE898KGPBGoRmc18Szrm3dP5h7RjvFFg19'
-      }
+      headers: this.state.headerRequest
     }
     let url = 'https://g1mmrc3a5f.execute-api.eu-central-1.amazonaws.com/prod/users';
     fetch(url, requestOptions)
         .then(response => response.json())
-        .then(data => this.setDatafromResponse(data.items));
+        .then(data => this.setDatafromResponse(data.items))
+        .catch(function() {
+          document.getElementById('logoutBtn').click();
+        });
   }
 
   deleteStudent () {
     this.handleClose();
     const requestOptions = {
       method: 'DELETE',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': 'GjftIFzE898KGPBGoRmc18Szrm3dP5h7RjvFFg19'
-      }
+      headers: this.state.headerRequest
     }
     let url = 'https://g1mmrc3a5f.execute-api.eu-central-1.amazonaws.com/prod/users/' + this.state.dialog.idItem;
     fetch(url, requestOptions)

@@ -4,7 +4,7 @@ import { withRouter, Redirect, Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { Container, Alert, Button, FormGroup, InputGroup, InputGroupAddon, InputGroupText, Input, Label } from 'reactstrap';
 import Widget from '../../components/Widget';
-import { registerUser, registerError } from '../../actions/register';
+import { registerError } from '../../actions/register';
 import Login from '../login';
 
 class Register extends React.Component {
@@ -18,7 +18,10 @@ class Register extends React.Component {
         this.state = {
             email: '',
             password: '',
-            confirmPassword: ''
+            confirmPassword: '',
+            showSnackbar: false,
+            messageSnackbar: '',
+            colorSnackbar: 'warning',
         };
 
         this.doRegister = this.doRegister.bind(this);
@@ -60,17 +63,56 @@ class Register extends React.Component {
 
     doRegister(e) {
         e.preventDefault();
+        let parent = this;
+
         if (!this.isPasswordValid()) {
             this.checkPassword();
         } else {
-            this.props.dispatch(registerUser({
-                creds: {
-                    email: this.state.email,
-                    password: this.state.password
+            const requestOptions = {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'x-api-key': 'GjftIFzE898KGPBGoRmc18Szrm3dP5h7RjvFFg19'
                 },
-                history: this.props.history
-            }));
+                body: JSON.stringify({
+                    username: this.state.email,
+                    password: this.state.password
+                })
+            }
+            let url = 'https://g1mmrc3a5f.execute-api.eu-central-1.amazonaws.com/prod/signup';
+            fetch(url, requestOptions)
+                .then(function(response) {
+                    if (!response.ok) {
+                        parent.showAlert('Invalid data, check the form', 'warning');
+                        throw Error(response.statusText);
+                    }
+                    return response;
+                })
+                .then(response => response.json())
+                .then(data => this.signupSuccess())
+                .catch(function() {
+                    //catch
+                });
         }
+    }
+
+    signupSuccess() {
+        this.showAlert('Signup Successfully. You will receive a validation email', 'success');
+        window.setTimeout(()=>{
+            window.location.href = window.location.origin + '/#/login';
+        },6000)
+
+
+    }
+
+    showAlert(msg, color) {
+        this.setState({messageSnackbar: msg})
+        this.setState({colorSnackbar: color})
+        this.setState({showSnackbar:true},()=>{
+            window.setTimeout(()=>{
+                this.setState({showSnackbar:false})
+            },5000)
+        });
     }
 
     render() {
@@ -144,6 +186,7 @@ class Register extends React.Component {
                                     Already have the account? Login now!
                                 </p>
                                 <Link className="d-block text-center mb-4" to="login">Enter the account</Link>
+                                <Alert color={this.state.colorSnackbar} isOpen={this.state.showSnackbar}>{this.state.messageSnackbar}</Alert>
                             </div>
                         </form>
                     </Widget>

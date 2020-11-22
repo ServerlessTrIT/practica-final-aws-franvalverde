@@ -18,7 +18,12 @@ class Student extends React.Component {
       zip: '',
       email: '',
       phone: '',
-      editMode: false
+      editMode: false,
+      headerRequest: {
+        'Content-Type': 'application/json',
+        'x-api-key': 'GjftIFzE898KGPBGoRmc18Szrm3dP5h7RjvFFg19',
+        'Authorization': 'Bearer ' + JSON.parse(localStorage.getItem('authData'))['token']
+      },
     };
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -34,15 +39,15 @@ class Student extends React.Component {
   getStudent () {
     const requestOptions = {
       method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': 'GjftIFzE898KGPBGoRmc18Szrm3dP5h7RjvFFg19'
-      }
+      headers: this.state.headerRequest
     }
     let url = 'https://g1mmrc3a5f.execute-api.eu-central-1.amazonaws.com/prod/users/' + this.state.studientId;
     fetch(url, requestOptions)
         .then(response => response.json())
-        .then(data => this.setDatafromResponse(data));
+        .then(data => this.setDatafromResponse(data))
+        .catch(function() {
+          document.getElementById('logoutBtn').click();
+        });
   }
 
   setDatafromResponse (response) {
@@ -100,10 +105,7 @@ class Student extends React.Component {
 
       const requestOptions = {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'x-api-key': 'GjftIFzE898KGPBGoRmc18Szrm3dP5h7RjvFFg19'
-        },
+        headers: this.state.headerRequest,
         body: JSON.stringify({
           id: (this.state.editMode) ? this.state.studientId : uuid,
           name: this.state.name,
@@ -118,12 +120,15 @@ class Student extends React.Component {
       let url = 'https://g1mmrc3a5f.execute-api.eu-central-1.amazonaws.com/prod/users';
       fetch(url, requestOptions)
           .then(response => response.json())
-          .then(data => this.successSave());
+          .then(data => this.successSave())
+          .catch(function() {
+            document.getElementById('logoutBtn').click();
+          });
     }
   }
 
   successSave() {
-    window.location.href = '../app/students';
+    window.location.href = window.location.origin + '/#/app/students';
   }
 
   render() {

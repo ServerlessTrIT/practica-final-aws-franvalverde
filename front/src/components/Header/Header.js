@@ -54,7 +54,7 @@ class Header extends React.Component {
           </NavItem>
           <NavItem className={`${s.divider} text-white`} />
           <NavItem>
-            <NavLink onClick={this.doLogout} className={`${s.navItem} text-white`} href="#">
+            <NavLink onClick={this.doLogout} id="logoutBtn" className={`${s.navItem} text-white`} href="#">
               <i className="glyphicon glyphicon-off" />
             </NavLink>
           </NavItem>
