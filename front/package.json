@@ -148,7 +148,7 @@
     "terser-webpack-plugin": "1.2.3",
     "url-loader": "4.1.0",
     "webpack": "4.43.0",
-    "webpack-dev-server": "3.11.0",
+    "webpack-dev-server": "5.2.2",
     "webpack-manifest-plugin": "2.2.0",
     "webpack-raphael": "2.1.4",
     "workbox-webpack-plugin": "5.1.3"
